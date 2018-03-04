@@ -6,10 +6,10 @@ tableSvc.createTableIfNotExists('snicodestablesvc', (err, result, response) => {
 		console.log('no err!');
 		let entGen = azure.TableUtilities.entityGenerator;
 		var sniObj = {
-			PartitionKey 	: engGen.String('sni'),
-			RowKey		: engGen.String('1'),
-			SniCode		: 9999,
-			SniDescription	: 'test'
+			PartitionKey 	: entGen.String('sni'),
+			RowKey		: entGen.String('1'),
+			SniCode		: entGen.Int32(9999),
+			SniDescription	: entGen.String('test')
 		};
 
 		tableSvc.insertEntity('snicodestablesvc', sniObj, (insErr, insResult, insResponse) => {
