@@ -1,16 +1,21 @@
 var fs = require('fs');
 var azure = require('azure-storage');
+var denodeify = require('denodeify');
+
+var rf = denodeify(fs.readFile);
 
 var Read = function() {
-	let content = fs.readFileSync('sni2007.csv', 'latin1').toString();
-	let lines = content.split('\n');
-	let d = lines.map((x) => x.split(';'));
-	let d2 = d.filter((x) => parseInt(x[1]));
-	console.log(d2);
-	return d2;
+	return rf('sni2007.csv', 'latin1')
+		.then(content => content.split('\n'))
+		.then(lines => lines.map((x) => x.split(';')))
+		.then(d => d.filter((x) => parseInt(x[1])));
 }
 
 var Load = function(data) {
+
+	console.log(data);
+	return;
+
 	var tableSvc = azure.createTableService();
 
 	tableSvc.createTableIfNotExists('snicodestablesvc', (err, result, response) => {
@@ -43,5 +48,5 @@ var Load = function(data) {
 	});
 }
 
-Load(Read());
+Read().then(Load);
 
